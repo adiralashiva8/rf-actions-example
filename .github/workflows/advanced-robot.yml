@@ -29,7 +29,7 @@ jobs:
           output_xml_path: 'results/output.xml'
           github_token: ${{ secrets.GITHUB_TOKEN }}
           project_name: 'Project ABC'
-          top_n: '10'
+          top_n: '5'
           comment_on: 'both'
           # Show everything
           show_passed_tests: 'false'
