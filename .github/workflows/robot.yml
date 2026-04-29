@@ -23,7 +23,7 @@ jobs:
 
       - name: Summary Report
         if: always()
-        uses: adiralashiva8/robotframework-summary-report-action@v2
+        uses: adiralashiva8/robotframework-summary-report-action@v3
         with:
           output_xml_path: 'results/output.xml'
           github_token: ${{ secrets.GITHUB_TOKEN }}
