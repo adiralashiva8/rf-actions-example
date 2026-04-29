@@ -1,0 +1,44 @@
+# Advanced: custom project name, tag prefixes, all sections, fail on errors
+name: Tests + Full Report
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Robot Framework
+        run: |
+          pip install robotframework
+          robot --outputdir results tests/
+        continue-on-error: true
+
+      - name: Summary Report
+        id: report
+        if: always()
+        uses: adiralashiva8/robotframework-summary-report-action@v1
+        with:
+          output_xml_path: 'results/output.xml'
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          project_name: 'Project ABC'
+          top_n: '10'
+          comment_on: 'both'
+          # Show everything
+          show_passed_tests: 'false'
+          show_failed_tests: 'false'
+          collapsible_sections: 'true'
+          # Uncomment to filter:
+          owner_name_tags: 'bob,alice,tim'
+          exclude_tags: 'smoke,regression,sanity'
+
+      - name: Fail if tests failed
+        if: steps.report.outputs.failed_tests != '0'
+        run: exit 1
