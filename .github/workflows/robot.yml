@@ -1,0 +1,29 @@
+# Simplest possible setup — report on every PR
+name: Tests + Report on PR
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Robot Framework
+        run: |
+          pip install robotframework
+          robot --outputdir results tests/
+        continue-on-error: true
+
+      - name: Summary Report
+        if: always()
+        uses: adiralashiva8/robotframework-summary-report-action@v1
+        with:
+          output_xml_path: 'results/output.xml'
+          github_token: ${{ secrets.GITHUB_TOKEN }}
